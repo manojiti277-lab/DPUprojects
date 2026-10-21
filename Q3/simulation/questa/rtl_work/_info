@@ -1,0 +1,77 @@
+m255
+K4
+z2
+!s12c _opt
+Z0 !s99 nomlopt
+!s11f vlog 2025.2 2025.05, May 31 2025
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z1 dD:/DPU/Q3/simulation/questa
+T_opt
+!i145 1
+!i144 0
+!s110 1792601164
+VmQ2YQkDD0EL=B9K[1]To73
+04 10 4 work ps2_fsm_tb fast 0
+=1-841b7770ab48-6ad8ec49-2ec-1160
+R0
+!s12f OEM100
+!s12b OEM100
+!s124 OEM10U2 
+!s135 nogc
+o-quiet -auto_acc_if_foreign -work work -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver -L rtl_work -L work +acc
+tCvgOpt 0 defaultOptions 1107585188
+n@_opt
+OL;O;2025.2;82
+vps2_fsm
+2D:/DPU/Q3/ps2_fsm.v
+Z2 !s110 1792601159
+!i10b 1
+!s100 C_QFFZ^CVEg^^F?il4F4;2
+IA33io?k^hzi<UY3h6WMQL0
+R1
+w1792601115
+8D:/DPU/Q3/ps2_fsm.v
+FD:/DPU/Q3/ps2_fsm.v
+!i122 0
+Z3 L0 1 26
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 OL;L;2025.2;82
+r1
+!s85 0
+31
+Z6 !s108 1792601159.000000
+!s107 D:/DPU/Q3/ps2_fsm.v|
+!s90 -reportprogress|300|-work|work|+incdir+D:/DPU/Q3|D:/DPU/Q3/ps2_fsm.v|
+!i113 0
+Z7 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z8 !s92 -work work +incdir+D:/DPU/Q3 -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z9 tCvgOpt 0 defaultOptions 1085333592
+vps2_fsm_tb
+2D:/DPU/Q3/ps2_fsm_tb.v
+R2
+!i10b 1
+!s100 <1oP`G;FCc^Pa@cVz<:9h2
+IRYOGTTZPL72RnN3IANAcD2
+R1
+w1792601114
+8D:/DPU/Q3/ps2_fsm_tb.v
+FD:/DPU/Q3/ps2_fsm_tb.v
+!i122 1
+R3
+R4
+R5
+r1
+!s85 0
+31
+R6
+!s107 D:/DPU/Q3/ps2_fsm_tb.v|
+!s90 -reportprogress|300|-work|work|+incdir+D:/DPU/Q3|D:/DPU/Q3/ps2_fsm_tb.v|
+!i113 0
+R7
+R8
+R9

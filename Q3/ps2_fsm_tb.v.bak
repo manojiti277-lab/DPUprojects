@@ -1,0 +1,117 @@
+`timescale 1ns/1ps
+
+module ps2_fsm_tb;
+
+    reg clk, reset, valid;
+    reg [7:0] data;
+    wire done;
+    integer errors, checks;
+
+    ps2_fsm dut (
+        .clk(clk),
+        .reset(reset),
+        .valid(valid),
+        .data(data),
+        .done(done)
+    );
+
+    always #5 clk = ~clk;
+
+    task check_cycle;
+        input r;
+        input v;
+        input [7:0] d;
+        input expected;
+        begin
+            @(negedge clk);
+            reset = r;
+            valid = v;
+            data = d;
+
+            @(posedge clk);
+            #1;
+            checks = checks + 1;
+
+            if (done !== expected) begin
+                errors = errors + 1;
+                $display("FAIL: time=%0t done=%b expected=%b",
+                         $time, done, expected);
+            end
+        end
+    endtask
+
+    initial begin
+        $dumpfile("ps2_fsm.vcd");
+        $dumpvars(0, ps2_fsm_tb);
+
+        clk = 0;
+        reset = 1;
+        valid = 0;
+        data = 0;
+        errors = 0;
+        checks = 0;
+
+        // Arguments: reset, valid, data, expected done.
+        check_cycle(1, 0, 8'h00, 0);
+
+        // Reject bytes with bit 3 = 0 before a message.
+        check_cycle(0, 1, 8'h00, 0);
+        check_cycle(0, 1, 8'h07, 0);
+        check_cycle(0, 1, 8'hF7, 0);
+        check_cycle(0, 0, 8'h08, 0);
+
+        // Message 1: bytes 2 and 3 have bit 3 = 0.
+        check_cycle(0, 1, 8'h08, 0);
+        check_cycle(0, 1, 8'h01, 0);
+        check_cycle(0, 1, 8'h02, 1);
+
+        // Message 2 starts immediately.
+        // All three bytes have bit 3 = 1.
+        check_cycle(0, 1, 8'h18, 0);
+        check_cycle(0, 1, 8'hFF, 0);
+        check_cycle(0, 1, 8'h08, 1);
+
+        // done must clear even during a gap.
+        check_cycle(0, 0, 8'h08, 0);
+        check_cycle(0, 0, 8'hFF, 0);
+
+        // Message 3: gaps between valid bytes.
+        check_cycle(0, 1, 8'h28, 0);
+        check_cycle(0, 0, 8'hFF, 0);
+        check_cycle(0, 0, 8'h00, 0);
+        check_cycle(0, 1, 8'h08, 0);
+        check_cycle(0, 0, 8'h08, 0);
+        check_cycle(0, 0, 8'hFF, 0);
+        check_cycle(0, 1, 8'h00, 1);
+
+        // Search again, then receive another message.
+        check_cycle(0, 1, 8'h00, 0);
+        check_cycle(0, 1, 8'h08, 0);
+        check_cycle(0, 1, 8'h00, 0);
+        check_cycle(0, 1, 8'h08, 1);
+
+        // Reset clears done and overrides valid.
+        check_cycle(1, 1, 8'h08, 0);
+        check_cycle(0, 1, 8'h00, 0);
+
+        // Reset during an incomplete message.
+        check_cycle(0, 1, 8'h08, 0);
+        check_cycle(0, 1, 8'h00, 0);
+        check_cycle(1, 1, 8'hFF, 0);
+        check_cycle(0, 1, 8'h00, 0);
+
+        // A fresh complete message after reset.
+        check_cycle(0, 1, 8'h08, 0);
+        check_cycle(0, 1, 8'h00, 0);
+        check_cycle(0, 1, 8'h00, 1);
+        check_cycle(0, 0, 8'h00, 0);
+
+        if (errors == 0)
+            $display("PASS: all %0d checks passed", checks);
+        else
+            $display("FAIL: %0d errors", errors);
+
+        $finish;
+    end
+
+endmodule

@@ -1,0 +1,60 @@
+`timescale 1ns/1ps
+
+module tb_sequence_detector;
+
+    reg clk;
+    reg reset;
+    reg x;
+
+    wire z;
+
+    reg [18:0] data;
+    reg [18:0] observed;
+
+    integer i;
+
+    sequence_detector dut (
+        .clk(clk),
+        .reset(reset),
+        .x(x),
+        .z(z)
+    );
+
+    initial clk = 1'b0;
+
+    always #5 clk = ~clk;
+
+    initial begin
+        reset = 1'b1;
+        x = 1'b0;
+        data = 19'b0010100100010111010;
+        observed = 19'b0;
+
+        @(negedge clk);
+        reset = 1'b0;
+
+        for (i = 18; i >= 0; i = i - 1) begin
+            x = data[i];
+
+            @(posedge clk);
+            #1;
+
+            observed[i] = z;
+
+            $display("Step=%0d x=%b z=%b", 19-i, x, z);
+
+            @(negedge clk);
+        end
+
+        $display("X = %b", data);
+        $display("Z = %b", observed);
+
+        if (observed === 19'b0001101011101100100)
+            $display("PASS: output matches the example.");
+        else
+            $display("FAIL: output does not match the example.");
+
+        $finish;
+    end
+
+endmodule
